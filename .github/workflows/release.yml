@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Get the target release version
       id: get_version
-      run: echo "VERSION::${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -26,9 +26,9 @@ jobs:
         formula-path: Formula/pvsadm.rb
         homebrew-tap: https://github.com/carmal891/homebrew-pvsadm
         base-branch: automate-bump-version-formulae
-        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/v${{env.version}}/pvsadm-darwin-amd64.tar.gz
+        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-darwin-amd64.tar.gz
         commit-message: |
-            {{formulaName}} v{{env.Version}}
+            {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
 
             Created by psvadm 
       env:
