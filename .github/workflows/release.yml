@@ -1,16 +1,15 @@
 name: Upload Release Asset
 
 on:
-  push:
-    tags: 'v*'
-
+  push
+  
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Get the target release version
       id: get_version
-      run: echo ::set-output name=VERSION::v1.19.0
+      run: echo ::set-output name=VERSION::v1.19.1
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -30,7 +29,6 @@ jobs:
         download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-darwin-amd64.tar.gz
         commit-message: |
             {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
-
             Created by psvadm 
       env:
         COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
