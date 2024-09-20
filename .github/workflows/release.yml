@@ -10,16 +10,7 @@ jobs:
     steps:
     - name: Get the target release version
       id: get_version
-      run: echo ::set-output name=VERSION::v0.1.17
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: 'go.mod'
-    - run: go version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/heads\//}
 
     - uses: mislav/bump-homebrew-formula-action@v3
       with:
