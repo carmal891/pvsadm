@@ -1,7 +1,8 @@
 name: Upload Release Asset
 
 on:
-  push
+  push:
+    tags: 'v*'
 
 jobs:
   build:
@@ -9,7 +10,7 @@ jobs:
     steps:
     - name: Get the target release version
       id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      run: echo ::set-output name=VERSION::v1.19.0
 
     - name: Checkout repository
       uses: actions/checkout@v4
