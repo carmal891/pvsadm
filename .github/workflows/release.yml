@@ -18,7 +18,8 @@ jobs:
         formula-path: Formula/pvsadm.rb
         homebrew-tap: carmal891/homebrew-pvsadm
         base-branch: automate-bump-version-formulae
-        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/.*.tar.gz
+        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-darwin-amd64.tar.gz
+        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-darwin-arm64.tar.gz
         commit-message: |
             {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
             Created by psvadm 
