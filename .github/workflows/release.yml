@@ -43,7 +43,7 @@ jobs:
         # Optional, defaults to homebrew/core
         tap: carmal891/homebrew-pvsadm
         # Formula name, required
-        formula: psvadm
+        formula: Formula/psvadm
         # Optional, will be determined automatically
         tag: ${{github.ref}}
         # Optional, will be determined automatically
