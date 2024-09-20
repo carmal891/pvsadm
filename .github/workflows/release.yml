@@ -21,19 +21,19 @@ jobs:
     - run: go version
 
     - uses: mislav/bump-homebrew-formula-action@v3
-        with:
-          formula-name: psvadm
-          formula-path: Formula/pvsadm.rb
-          homebrew-tap: https://github.com/carmal891/homebrew-pvsadm
-          base-branch: automate-bump-version-formulae
-          download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/v${{env.version}}/pvsadm-darwin-amd64.tar.gz
-          commit-message: |
+      with:
+        formula-name: psvadm
+        formula-path: Formula/pvsadm.rb
+        homebrew-tap: https://github.com/carmal891/homebrew-pvsadm
+        base-branch: automate-bump-version-formulae
+        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/v${{env.version}}/pvsadm-darwin-amd64.tar.gz
+        commit-message: |
             {{formulaName}} v{{env.Version}}
 
             Created by psvadm 
-        env:
-          COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
