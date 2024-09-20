@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Get the target release version
       id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/heads\//}
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
     - uses: mislav/bump-homebrew-formula-action@v3
       with:
@@ -30,4 +30,12 @@ jobs:
 
 
 
-   
+   #https://github.com/ppc64le-cloud/pvsadm/releases/download/v0.1.17/pvsadm-darwin-amd64.tar.gz
+   #/repos/ppc64le-cloud/pvsadm/releases/tags/refs%2Ftags%2Fv0.1.17
+
+   #https://github.com/ppc64le-cloud/pvsadm/releases/download/refs/tags/v0.1.17/pvsadm-darwin-amd64.tar.gz
+
+
+
+
+
