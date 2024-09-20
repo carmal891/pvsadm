@@ -12,19 +12,19 @@ jobs:
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-  - uses: mislav/bump-homebrew-formula-action@v3
-    with:
-      formula-name: psvadm
-      formula-path: Formula/pvsadm.rb
-      homebrew-tap: carmal891/homebrew-pvsadm
-      base-branch: automate-bump-version-formulae
-      download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/.*.tar.gz
-      commit-message: |
-          {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
-          Created by psvadm 
-    env:
-      COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-      # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: mislav/bump-homebrew-formula-action@v3
+      with:
+        formula-name: psvadm
+        formula-path: Formula/pvsadm.rb
+        homebrew-tap: carmal891/homebrew-pvsadm
+        base-branch: automate-bump-version-formulae
+        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/.*.tar.gz
+        commit-message: |
+            {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
+            Created by psvadm 
+      env:
+        COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         
     #- name: Update Homebrew formula
