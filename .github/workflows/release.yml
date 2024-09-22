@@ -46,7 +46,7 @@ jobs:
         formula: |
             pvsadm_darwin_amd64
             pvsadm_darwin_arm64
-            test-formula-pypi-url
+            psvadm_linux_amd64
 
         livecheck: true
         # Optional, will be determined automatically
