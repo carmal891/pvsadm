@@ -43,6 +43,12 @@ jobs:
         tap: carmal891/homebrew-pvsadm
         # Formula name, required
         formula: pvsadm_darwin_amd64, pvsadm_darwin_arm64
+        formula: |
+            pvsadm_darwin_amd64
+            pvsadm_darwin_arm64
+            test-formula-pypi-url
+
+        livecheck: true
         # Optional, will be determined automatically
         tag: ${{github.ref}}
         # Optional, will be determined automatically
