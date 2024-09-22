@@ -26,7 +26,6 @@ jobs:
   #      COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
   #      # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
     - name: Update Homebrew formula
       uses: dawidd6/action-homebrew-bump-formula@v3
       with:
