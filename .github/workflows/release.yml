@@ -12,70 +12,44 @@ jobs:
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-    - uses: mislav/bump-homebrew-formula-action@v3
+  #  - uses: mislav/bump-homebrew-formula-action@v3
+  #    with:
+  #      formula-name: psvadm
+  #      formula-path: Formula/pvsadm.rb
+  #      homebrew-tap: carmal891/homebrew-pvsadm
+  #      base-branch: automate-bump-version-formulae
+  #      download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-darwin-amd64.tar.gz
+  #      commit-message: |
+  #          {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
+  #          Created by psvadm 
+  #    env:
+  #      COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+  #      # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+    - name: Update Homebrew formula
+      uses: dawidd6/action-homebrew-bump-formula@v3
       with:
-        formula-name: psvadm
-        formula-path: Formula/pvsadm.rb
-        homebrew-tap: carmal891/homebrew-pvsadm
-        base-branch: automate-bump-version-formulae
-        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-darwin-amd64.tar.gz
-        commit-message: |
-            {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
-            Created by psvadm 
-      env:
-        COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - uses: mislav/bump-homebrew-formula-action@v3
-      with:
-        formula-name: psvadm
-        formula-path: Formula/pvsadm.rb
-        homebrew-tap: carmal891/homebrew-pvsadm
-        base-branch: automate-bump-version-formulae
-        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-darwin-arm64.tar.gz
-        commit-message: |
-            {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
-            Created by psvadm 
-      env:
-        COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-
-    - uses: mislav/bump-homebrew-formula-action@v3
-      with:
-        formula-name: psvadm
-        formula-path: Formula/pvsadm.rb
-        homebrew-tap: carmal891/homebrew-pvsadm
-        base-branch: automate-bump-version-formulae
-        download-url: https://github.com/ppc64le-cloud/pvsadm/releases/download/${{ steps.get_version.outputs.VERSION }}/pvsadm-linux-amd64.tar.gz
-        commit-message: |
-            {{formulaName}} ${{ steps.get_version.outputs.VERSION }}
-            Created by psvadm 
-      env:
-        COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-
-
-    #- name: Update Homebrew formula
-    #  uses: dawidd6/action-homebrew-bump-formula@v3
-    #  with:
-    #    # Required, custom GitHub access token with the 'public_repo' and 'workflow' scopes
-    #    token: ${{secrets.COMMITTER_TOKEN}}
-    #    # Optional, will commit with this user name
-    #    user_name: bumperbot
-    #    # Optional, will commit with this user email
-    #    #user_email: email@example.com
-    #    # Optional, will create tap repo fork in organization
-    #    #org: ORG
-    #    # Optional, use the origin repository instead of forking
-    #    #no_fork: false
-    #    # Optional, defaults to homebrew/core
-    #    tap: carmal891/homebrew-pvsadm
-    #    # Formula name, required
-    #    formula: pvsadm
-    #    # Optional, will be determined automatically
-    #    tag: ${{github.ref}}
-    #    # Optional, will be determined automatically
-    #    revision: ${{github.sha}}
-    #    # Optional, if don't want to check for already open PRs
-    #    force: false # true  
+        # Required, custom GitHub access token with the 'public_repo' and 'workflow' scopes
+        token: ${{secrets.COMMITTER_TOKEN}}
+        # Optional, will commit with this user name
+        user_name: bumperbot
+        # Optional, will commit with this user email
+        #user_email: email@example.com
+        # Optional, will create tap repo fork in organization
+        #org: ORG
+        # Optional, use the origin repository instead of forking
+        #no_fork: false
+        # Optional, defaults to homebrew/core
+        tap: carmal891/homebrew-pvsadm
+        # Formula name, required
+        formula: pvsadm
+        # Optional, will be determined automatically
+        tag: ${{github.ref}}
+        # Optional, will be determined automatically
+        revision: ${{github.sha}}
+        # Optional, if don't want to check for already open PRs
+        force: false # true  
     
 
 

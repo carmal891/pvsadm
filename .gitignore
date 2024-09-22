@@ -20,3 +20,5 @@ pvsadm
 
 # audit logfile
 pvsadm_audit.log
+
+pvsadm.log
