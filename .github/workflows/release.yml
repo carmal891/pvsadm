@@ -42,7 +42,7 @@ jobs:
         # Optional, will create tap repo fork in organization
         #org: ORG
         # Optional, use the origin repository instead of forking
-        #no_fork: false
+        no_fork: true
         # Optional, defaults to homebrew/core
         tap: carmal891/homebrew-pvsadm
         # Formula name, required
@@ -51,7 +51,7 @@ jobs:
             pvsadm_darwin_arm64
             pvsadm_linux_amd64
   
-        livecheck: true
+        livecheck: false
         # Optional, will be determined automatically
         tag: ${{ steps.get_version.outputs.VERSION }}
         # Optional, will be determined automatically
