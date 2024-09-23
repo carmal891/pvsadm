@@ -43,7 +43,7 @@ jobs:
         tap: carmal891/homebrew-pvsadm
         # Formula name, required
         formula: |
-            pvsadm_linux_amd64
+            pvsadm_backup
 
         livecheck: true
         # Optional, will be determined automatically
