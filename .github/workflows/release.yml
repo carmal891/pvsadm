@@ -30,33 +30,32 @@ jobs:
   #      COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
   #      # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  #  - name: Update Homebrew formula
-  #    uses: dawidd6/action-homebrew-bump-formula@v3
-  #    with:
-  #      # Required, custom GitHub access token with the 'public_repo' and 'workflow' scopes
-  #      token: ${{secrets.COMMITTER_TOKEN}}
-  #      # Optional, will commit with this user name
-  #      user_name: bumperbot
-  #      # Optional, will commit with this user email
-  #      #user_email: email@example.com
-  #      # Optional, will create tap repo fork in organization
-  #      #org: ORG
-  #      # Optional, use the origin repository instead of forking
-  #      #no_fork: false
-  #      # Optional, defaults to homebrew/core
-  #      tap: carmal891/homebrew-pvsadm
-  #      # Formula name, required
-  #      formula: |
-  #          pvsadm_backup
-  #          pvsadm_darwin_amd64
-  #          pvsadm_darwin_arm64
-  #          pvsadm_linux_amd64
-  #
-  #      livecheck: true
-  #      # Optional, will be determined automatically
-  #      tag: ${{github.ref}}
-  #      # Optional, will be determined automatically
-  #      revision: ${{github.sha}}
-  #      # Optional, if don't want to check for already open PRs
-  #      force: true # true 
+    - name: Update Homebrew formula
+      uses: dawidd6/action-homebrew-bump-formula@v3
+      with:
+        # Required, custom GitHub access token with the 'public_repo' and 'workflow' scopes
+        token: ${{secrets.COMMITTER_TOKEN}}
+        # Optional, will commit with this user name
+        user_name: bumperbot
+        # Optional, will commit with this user email
+        #user_email: email@example.com
+        # Optional, will create tap repo fork in organization
+        #org: ORG
+        # Optional, use the origin repository instead of forking
+        #no_fork: false
+        # Optional, defaults to homebrew/core
+        tap: carmal891/homebrew-pvsadm
+        # Formula name, required
+        formula: |
+            pvsadm_darwin_amd64
+            pvsadm_darwin_arm64
+            pvsadm_linux_amd64
+  
+        livecheck: true
+        # Optional, will be determined automatically
+        tag: ${{ steps.get_version.outputs.VERSION }}
+        # Optional, will be determined automatically
+        revision: ${{github.sha}}
+        # Optional, if don't want to check for already open PRs
+        force: true # true 
 
