@@ -45,7 +45,7 @@ jobs:
         formula: |
             pvsadm_backup
 
-        livecheck: true
+        livecheck: false
         # Optional, will be determined automatically
         tag: ${{github.ref}}
         # Optional, will be determined automatically
