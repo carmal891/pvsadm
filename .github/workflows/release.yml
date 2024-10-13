@@ -160,12 +160,12 @@ jobs:
     - name: Update Homebrew formula
       env:
         GITHUB_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
+        GH_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
       run: |
         ls -lah
         cd ci/
         chmod +x formula_updater.sh
         git config --global user.name "pvsadm GitHub Actions"
         git config --global user.email "actions@github.com"
-        export HOMEBREW_UPDATER_TOKEN=${GITHUB_TOKEN}
         ./formula_updater.sh 0.1.12 pvsadm.rb
      
