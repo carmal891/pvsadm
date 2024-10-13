@@ -6,6 +6,12 @@ if [ "$#" -ne 2 ]; then
     exit 1
 fi
 
+# Ensure the token is available
+if [ -z "$HOMEBREW_UPDATER_TOKEN" ]; then
+    echo "Error: HOMEBREW_UPDATER_TOKEN is not set."
+    exit 1
+fi
+
 # Assign arguments to variables
 NEW_VERSION="$1"
 FORMULA_FILE="$2"
@@ -120,8 +126,13 @@ done
 git add "$FORMULA_FILE"
 git commit -m "Update formula to version $NEW_VERSION"
 
+git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/carmal891/homebrew-pvsadm.git
+
+
 # Push the changes to the remote repository
 git push origin "$BRANCH_NAME"
+
+gh auth login --with-token <<< "${GITHUB_TOKEN}"
 
 # Create a pull request to the master branch
 gh pr create --base master --head "$BRANCH_NAME" --title "Update formula to version $NEW_VERSION" --body "This PR updates the formula for pvsadm to version $NEW_VERSION."
