@@ -141,8 +141,8 @@ gh auth status
 
 sleep 5
 
-# Create a pull request to the master branch
-gh pr create --base master --head "$BRANCH_NAME" \
+# Create a pull request to the main branch
+gh pr create --head "$BRANCH_NAME" \
     --title "Update formula to version $NEW_VERSION" \
     --body "This PR updates the formula for pvsadm to version $NEW_VERSION."
 
