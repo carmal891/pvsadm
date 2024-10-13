@@ -156,3 +156,12 @@ jobs:
         asset_path: pvsadm-binaries.tar.gz
         asset_name: pvsadm-binaries.tar.gz
         asset_content_type: application/tar+gzip
+
+    - name: Update Homebrew formula
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        chmod +x ../../ci/formula_updater.sh
+        ./formula_updater.sh 0.1.12 pvsadm.rb
+     
+      
