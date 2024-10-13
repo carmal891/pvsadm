@@ -162,7 +162,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         ls -lah
-        chmod +x ../../ci/formula_updater.sh
+        cd ci/
+        chmod +x formula_updater.sh
         ./formula_updater.sh 0.1.12 pvsadm.rb
      
       
