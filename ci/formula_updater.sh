@@ -132,6 +132,8 @@ git remote set-url origin https://x-access-token:${HOMEBREW_UPDATER_TOKEN}@githu
 # Push the changes to the remote repository
 git push origin "$BRANCH_NAME"
 
+unset GITHUB_TOKEN
+
 gh auth login --with-token <<< "${HOMEBREW_UPDATER_TOKEN}"
 
 # Create a pull request to the master branch
