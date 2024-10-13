@@ -7,10 +7,10 @@ if [ "$#" -ne 2 ]; then
 fi
 
 # Ensure the token is available
-if [ -z "$HOMEBREW_UPDATER_TOKEN" ]; then
-    echo "Error: HOMEBREW_UPDATER_TOKEN is not set."
-    exit 1
-fi
+#if [ -z "$HOMEBREW_UPDATER_TOKEN" ]; then
+#    echo "Error: HOMEBREW_UPDATER_TOKEN is not set."
+#    exit 1
+#fi
 
 # Assign arguments to variables
 NEW_VERSION="$1"
