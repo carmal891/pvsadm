@@ -134,7 +134,12 @@ git push origin "$BRANCH_NAME"
 
 unset GITHUB_TOKEN
 
-gh auth login --with-token <<< "${GH_TOKEN}"
+#gh auth login --with-token <<< "${GH_TOKEN}"
+gh auth login
+
+gh auth status
+
+sleep 5
 
 # Create a pull request to the master branch
 gh pr create --base master --head "$BRANCH_NAME" --title "Update formula to version $NEW_VERSION" --body "This PR updates the formula for pvsadm to version $NEW_VERSION."
