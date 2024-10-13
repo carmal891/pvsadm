@@ -126,13 +126,13 @@ done
 git add "$FORMULA_FILE"
 git commit -m "Update formula to version $NEW_VERSION"
 
-git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/carmal891/homebrew-pvsadm.git
+git remote set-url origin https://x-access-token:${HOMEBREW_UPDATER_TOKEN}@github.com/carmal891/homebrew-pvsadm.git
 
 
 # Push the changes to the remote repository
 git push origin "$BRANCH_NAME"
 
-gh auth login --with-token <<< "${GITHUB_TOKEN}"
+gh auth login --with-token <<< "${HOMEBREW_UPDATER_TOKEN}"
 
 # Create a pull request to the master branch
 gh pr create --base master --head "$BRANCH_NAME" --title "Update formula to version $NEW_VERSION" --body "This PR updates the formula for pvsadm to version $NEW_VERSION."
