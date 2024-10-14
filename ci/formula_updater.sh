@@ -20,9 +20,9 @@ FORMULA_PATH="Formula/"
 RELEASES_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
 
 URL_VALUES=(
-    "$RELEASESPATH/v$NEW_VERSION/pvsadm-darwin-amd64.tar.gz"
+    "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-amd64.tar.gz"
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-arm64.tar.gz"
-    "$RELEASESPATH/v$NEW_VERSION/pvsadm-linux-amd64.tar.gz"
+    "$RELEASES_PATH/v$NEW_VERSION/pvsadm-linux-amd64.tar.gz"
 )
 
 # Function to compute SHA256 checksum
