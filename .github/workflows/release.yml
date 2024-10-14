@@ -168,5 +168,7 @@ jobs:
         git config --global user.name "pvsadm GitHub Actions"
         git config --global user.email "actions@github.com"
         echo "VERSION: ${{ steps.get_version.outputs.VERSION }}"
-        ./formula_updater.sh 0.1.9 https://github.com/carmal891/homebrew-pvsadm pvsadm.rb
+        GET_VERSION_OUTPUT="${{ steps.get_version.outputs.VERSION }}"
+        VERSION=${GET_VERSION_OUTPUT#v}
+        ./formula_updater.sh "$VERSION" https://github.com/carmal891/homebrew-pvsadm pvsadm.rb
      
