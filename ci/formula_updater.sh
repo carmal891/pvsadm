@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Check number of arguments
 if [ "$#" -ne 4 ]; then
     echo "Usage: $0 <new_version> <brew_tap_repo_url> <formula_file>"
