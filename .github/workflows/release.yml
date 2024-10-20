@@ -162,9 +162,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
         GH_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
       run: |
-        ls -lah
         cd ci/
-        chmod +x formula_updater.sh
+        chmod +x brew_formula_updater.sh
         git config --global user.name "pvsadm GitHub Actions"
         git config --global user.email "pvsadmactions@github.com"
         echo "VERSION: ${{ steps.get_version.outputs.VERSION }}"
@@ -173,5 +172,4 @@ jobs:
         TAP_REPO_URL="https://github.com/carmal891/homebrew-pvsadm"
         FORMULA_FILE="pvsadm.rb"
         VERSION=${GET_VERSION_OUTPUT#v}
-        ./formula_updater.sh "$REPO_URL" "$VERSION" "$TAP_REPO_URL" "$FORMULA_FILE"
-    
+        ./brew_formula_updater.sh "$REPO_URL" "$VERSION" "$TAP_REPO_URL" "$FORMULA_FILE"
