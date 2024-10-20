@@ -35,13 +35,20 @@ compute_sha256() {
     local url="$1"
     local temp_file="$(mktemp)"
 
-    if ! curl -L -o "$temp_file" "$url"; then
-        echo "Error: failed to download $url"
+    # Download the file and capture the HTTP status code
+    http_status=$(curl -L -w "%{http_code}" -o "$temp_file" "$url")
+    
+    # Check if the HTTP status is 200 (OK)
+    if [ "$http_status" -ne 200 ]; then
+        echo "Error: Failed to download $url (HTTP status: $http_status)"
+        rm "$temp_file"
         exit 1
     fi
 
-    # Verify the content is not an HTML error page
-    if head -n 1 "$temp_file" | grep -qi '<!doctype\|<html>'; then
+    echo "Verify the content is not an HTML error page"
+
+    # Verify the content is not an HTML error page (check first 10 lines)
+    if grep -iq "<!doctype\|<html\|<head\|<body" <(head -n 10 "$temp_file"); then
         echo "Error: Downloaded content is not a valid tarball. Possibly an HTML error page."
         rm "$temp_file"
         exit 1
