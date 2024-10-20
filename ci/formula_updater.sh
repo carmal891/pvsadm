@@ -126,8 +126,6 @@ fi
 
 unset GITHUB_TOKEN
 
-
-gh auth status
 if gh pr create --head "$BRANCH_NAME" \
     --title "Updates formula to version $NEW_VERSION" \
     --body "New Release version $NEW_VERSION has been created in pvsadm. Bumping formula version for pvsadm to version $NEW_VERSION."; then
