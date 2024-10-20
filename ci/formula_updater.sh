@@ -64,10 +64,6 @@ fi
 cd brew_tap_repo_temp || { echo "Error: Failed to navigate to brew_tap_repo_temp"; exit 1; }
 BRANCH_NAME="bump_formula_v$NEW_VERSION"
 
-if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
-    echo "Error: branch $BRANCH_NAME already exists"
-    exit 1
-fi
 
 git checkout -b "$BRANCH_NAME" || { echo "Error: Failed to create branch $BRANCH_NAME"; exit 1; }
 
@@ -111,6 +107,11 @@ done
 #commit, push the changes to the remote tap repository and create PR for review
 if [ -z "$GITHUB_TOKEN" ]; then
     echo "Error: GITHUB_TOKEN is not set"
+    exit 1
+fi
+
+if git ls-remote --exit-code --heads origin "$BRANCH_NAME"; then
+    echo "Error: The branch '$BRANCH_NAME' already exists on the remote. Please create a new branch."
     exit 1
 fi
 
