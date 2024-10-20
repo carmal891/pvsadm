@@ -6,9 +6,9 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
-# Ensure the Github token and GH CLI token is available
-if [ -z "$GITHUB_TOKEN" && -z "$GH_TOKEN"]; then
-    echo "Error: required tokens is not set."
+# Ensure the GitHub token and GH CLI token are available
+if [[ -z "$GITHUB_TOKEN" || -z "$GH_TOKEN" ]]; then
+    echo "Error: Required tokens are not set."
     exit 1
 fi
 
@@ -73,7 +73,6 @@ if [ ! -f "$FORMULA_FILE" ]; then
 fi
 sed -i.bak "s/version \".*\"/version \"$NEW_VERSION\"/" "$FORMULA_FILE"
 
-
 echo "Updating individual formula to version $NEW_VERSION."
 for index in "${!SHAs[@]}"; do
     SHA=${SHAs[$index]}
@@ -99,7 +98,7 @@ for index in "${!SHAs[@]}"; do
 done
 
 
-#commit, push the changes to the remote tap repository and create PR for review
+# Commit, push the changes to remote tap repository and create PR for review
 if [ -z "$GITHUB_TOKEN" ]; then
     echo "Error: GITHUB_TOKEN is not set"
     exit 1
