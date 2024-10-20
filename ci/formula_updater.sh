@@ -19,6 +19,10 @@ FORMULA_FILE="$4"
 FORMULA_PATH="Formula/"
 RELEASES_PATH="$BASE_REPO_URL/releases/download"
 
+echo "release path is "$RELEASES_PATH
+
+exit 1
+
 URL_VALUES=(
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-amd64.tar.gz"
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-arm64.tar.gz"
