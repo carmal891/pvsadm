@@ -124,13 +124,8 @@ if ! git push origin "$BRANCH_NAME"; then
     exit 1
 fi
 
-unset GH_TOKEN
 unset GITHUB_TOKEN
 
-if ! gh auth login; then
-    echo "Error: gitHub authentication failed"
-    exit 1
-fi
 
 gh auth status
 if gh pr create --head "$BRANCH_NAME" \
