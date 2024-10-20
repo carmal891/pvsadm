@@ -39,6 +39,14 @@ compute_sha256() {
         echo "Error: failed to download $url"
         exit 1
     fi
+
+    # Verify the content is not an HTML error page
+    if head -n 1 "$temp_file" | grep -qi '<!doctype\|<html>'; then
+        echo "Error: Downloaded content is not a valid tarball. Possibly an HTML error page."
+        rm "$temp_file"
+        exit 1
+    fi
+
     local sha256
     sha256=$(shasum -a 256 "$temp_file" | awk '{print $1}')
     rm "$temp_file"
