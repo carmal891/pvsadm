@@ -17,7 +17,8 @@ NEW_VERSION="$2"
 BREW_TAP_REPO_URL="$3"
 FORMULA_FILE="$4"
 FORMULA_PATH="Formula/"
-RELEASES_PATH="$BASE_REPO_URL/releases/download"
+#RELEASES_PATH="$BASE_REPO_URL/releases/download"
+RELEASE_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
 
 echo "release path is "$RELEASES_PATH
 
