@@ -125,13 +125,13 @@ if ! git push origin "$BRANCH_NAME"; then
 fi
 
 unset GH_TOKEN
+unset GITHUB_TOKEN
 
 if ! gh auth login; then
     echo "Error: gitHub authentication failed"
     exit 1
 fi
 
-gh auth login
 gh auth status
 if gh pr create --head "$BRANCH_NAME" \
     --title "Updates formula to version $NEW_VERSION" \
