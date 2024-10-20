@@ -19,10 +19,10 @@ NEW_VERSION="$2"
 BREW_TAP_REPO_URL="$3"
 FORMULA_FILE="$4"
 FORMULA_PATH="Formula/"
-RELEASES_PATH="$BASE_REPO_URL/releases/download"
-#REFERENCE RELEASES_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
+#RELEASES_PATH="$BASE_REPO_URL/releases/download"
+RELEASES_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
 
-echo "release path -"$RELEASES_PATH
+echo "Release path in base repo - "$RELEASES_PATH
 
 URL_VALUES=(
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-amd64.tar.gz"
