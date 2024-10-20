@@ -1,23 +1,23 @@
 #!/bin/bash
 
-# Check for the right number of arguments
-if [ "$#" -ne 3 ]; then
+# Check number of arguments
+if [ "$#" -ne 4 ]; then
     echo "Usage: $0 <new_version> <brew_tap_repo_url> <formula_file>"
     exit 1
 fi
 
-# Ensure the token is available
-#if [ -z "$HOMEBREW_UPDATER_TOKEN" ]; then
-#    echo "Error: HOMEBREW_UPDATER_TOKEN is not set."
-#    exit 1
-#fi
+# Ensure the Github token and GH CLI token is available
+if [ -z "$GITHUB_TOKEN" && -z "$GH_TOKEN"]; then
+    echo "Error: required tokens is not set."
+    exit 1
+fi
 
-# Assign arguments to variables
-NEW_VERSION="$1"
-BREW_TAP_REPO_URL="$2"
-FORMULA_FILE="$3"
+BASE_REPO_URL="$1"
+NEW_VERSION="$2"
+BREW_TAP_REPO_URL="$3"
+FORMULA_FILE="$4"
 FORMULA_PATH="Formula/"
-RELEASES_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
+RELEASES_PATH="$BASE_REPO_URL/releases/download"
 
 URL_VALUES=(
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-amd64.tar.gz"
@@ -25,7 +25,7 @@ URL_VALUES=(
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-linux-amd64.tar.gz"
 )
 
-# Function to compute SHA256 checksum
+# Compute SHA256 checksum
 compute_sha256() {
     local url="$1"
     local temp_file="$(mktemp)"
@@ -63,23 +63,18 @@ if [ $? -ne 0 ]; then
 fi
 cd brew_tap_repo_temp || { echo "Error: Failed to navigate to brew_tap_repo_temp"; exit 1; }
 BRANCH_NAME="bump_formula_v$NEW_VERSION"
-
-
 git checkout -b "$BRANCH_NAME" || { echo "Error: Failed to create branch $BRANCH_NAME"; exit 1; }
-
-#Navigate to formula path
 cd "$FORMULA_PATH" || { echo "Error: Failed to navigate to $FORMULA_PATH"; exit 1; }
 
-#1. Update the main version in the formula file
+#Update the main version in the formula file
 if [ ! -f "$FORMULA_FILE" ]; then
     echo "Error: Formula file $FORMULA_FILE not found"
     exit 1
 fi
 sed -i.bak "s/version \".*\"/version \"$NEW_VERSION\"/" "$FORMULA_FILE"
 
-#2. Update the individual formula and SHA based on OS and arch
-echo "Updating individual formula to version $NEW_VERSION."
 
+echo "Updating individual formula to version $NEW_VERSION."
 for index in "${!SHAs[@]}"; do
     SHA=${SHAs[$index]}
     echo "$SHA"  

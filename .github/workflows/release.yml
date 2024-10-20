@@ -166,9 +166,10 @@ jobs:
         cd ci/
         chmod +x formula_updater.sh
         git config --global user.name "pvsadm GitHub Actions"
-        git config --global user.email "actions@github.com"
+        git config --global user.email "pvsadmactions@github.com"
         echo "VERSION: ${{ steps.get_version.outputs.VERSION }}"
         GET_VERSION_OUTPUT="${{ steps.get_version.outputs.VERSION }}"
+        REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
         VERSION=${GET_VERSION_OUTPUT#v}
-        ./formula_updater.sh "$VERSION" https://github.com/carmal891/homebrew-pvsadm pvsadm.rb
+        ./formula_updater.sh "$REPO_URL" "$VERSION" https://github.com/carmal891/homebrew-pvsadm pvsadm.rb
      
