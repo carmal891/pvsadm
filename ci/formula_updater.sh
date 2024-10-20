@@ -20,7 +20,11 @@ BREW_TAP_REPO_URL="$3"
 FORMULA_FILE="$4"
 FORMULA_PATH="Formula/"
 
-echo "Release path in base repo - "$RELEASES_PATH
+echo "BASE_REPO_URL: $BASE_REPO_URL"
+echo "NEW_VERSION: $NEW_VERSION"
+echo "BREW_TAP_REPO_URL: $BREW_TAP_REPO_URL"
+echo "FORMULA_FILE: $FORMULA_FILE"
+echo "RELEASES path in base repo - "$RELEASES_PATH
 
 URL_VALUES=(
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-amd64.tar.gz"
