@@ -107,14 +107,10 @@ for index in "${!SHAs[@]}"; do
     fi
 done
 
+
 #commit, push the changes to the remote tap repository and create PR for review
 if [ -z "$GITHUB_TOKEN" ]; then
     echo "Error: GITHUB_TOKEN is not set"
-    exit 1
-fi
-
-if ! gh auth login; then
-    echo "Error: gitHub authentication failed"
     exit 1
 fi
 
@@ -128,6 +124,12 @@ if ! git push origin "$BRANCH_NAME"; then
 fi
 
 unset GITHUB_TOKEN
+
+if ! gh auth login; then
+    echo "Error: gitHub authentication failed"
+    exit 1
+fi
+
 gh auth login
 gh auth status
 if gh pr create --head "$BRANCH_NAME" \
