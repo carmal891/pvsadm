@@ -2,13 +2,13 @@
 
 set -e
 
-# Check number of arguments
+# Validate argument count
 if [ "$#" -ne 4 ]; then
-    echo "Usage: $0 <new_version> <brew_tap_repo_url> <formula_file>"
+    echo "Usage: $0 <base_repo_url> <new_version> <brew_tap_repo_url> <formula_file>"
     exit 1
 fi
 
-# Ensure the GitHub token and GH CLI token are available
+# Ensure GitHub token and GH CLI token are set
 if [[ -z "$GITHUB_TOKEN" || -z "$GH_TOKEN" ]]; then
     echo "Error: Required tokens are not set."
     exit 1
@@ -19,10 +19,10 @@ NEW_VERSION="$2"
 BREW_TAP_REPO_URL="$3"
 FORMULA_FILE="$4"
 FORMULA_PATH="Formula/"
-#RELEASES_PATH="$BASE_REPO_URL/releases/download"
-RELEASES_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
+RELEASES_PATH="$BASE_REPO_URL/releases/download"
+#REFERENCE RELEASES_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
 
-echo "release path is "$RELEASES_PATH
+echo "release path -"$RELEASES_PATH
 
 URL_VALUES=(
     "$RELEASES_PATH/v$NEW_VERSION/pvsadm-darwin-amd64.tar.gz"
@@ -34,20 +34,18 @@ URL_VALUES=(
 compute_sha256() {
     local url="$1"
     local temp_file="$(mktemp)"
-
-    # Download the file and capture the HTTP status code
     http_status=$(curl -L -w "%{http_code}" -o "$temp_file" "$url")
     
-    # Check if the HTTP status is 200 (OK)
+    # Check HTTP status 200
     if [ "$http_status" -ne 200 ]; then
         echo "Error: Failed to download $url (HTTP status: $http_status)"
         rm "$temp_file"
         exit 1
     fi
 
-    # Verify the content is not an HTML error page (check first 10 lines)
+    # Verify the content is not an HTML error page
     if grep -iq "<!doctype\|<html\|<head\|<body" <(head -n 10 "$temp_file"); then
-        echo "Error: Downloaded content is not a valid tarball. Possibly an HTML error page."
+        echo "Error: Downloaded content is not a valid tar. Possibly an HTML error page."
         rm "$temp_file"
         exit 1
     fi
@@ -55,7 +53,7 @@ compute_sha256() {
     local sha256
     sha256=$(shasum -a 256 "$temp_file" | awk '{print $1}')
     rm "$temp_file"
-    #For testing purpose echo "SHA256 for $url: $sha256"
+    #uncomment for testing purposes echo "SHA256 for $url: $sha256"
     echo "$sha256"
 }
 
@@ -72,8 +70,7 @@ for url in "${URL_VALUES[@]}"; do
     sleep 1
 done
 
-
-# Clone the repository with brew formula and checkout a new branch for pushing updates
+# Clone the repository having brew formula and checkout a new branch for pushing updates
 git clone "$BREW_TAP_REPO_URL" brew_tap_repo_temp
 if [ $? -ne 0 ]; then
     echo "Error: failed to clone the repository"
@@ -85,14 +82,15 @@ BRANCH_NAME="bump_formula_v$NEW_VERSION"
 git checkout -b "$BRANCH_NAME" || { echo "Error: Failed to create branch $BRANCH_NAME"; exit 1; }
 cd "$FORMULA_PATH" || { echo "Error: Failed to navigate to $FORMULA_PATH"; exit 1; }
 
-#Update the main version in the formula file
+# Update the version field in formula file
 if [ ! -f "$FORMULA_FILE" ]; then
     echo "Error: Formula file $FORMULA_FILE not found"
     exit 1
 fi
 sed -i.bak "s/version \".*\"/version \"$NEW_VERSION\"/" "$FORMULA_FILE"
 
-echo "Updating individual formula to version $NEW_VERSION."
+# Update the individual URL and the corresponding sha hash in formula file
+echo "updating individual URL and SHA to version $NEW_VERSION."
 for index in "${!SHAs[@]}"; do
     SHA=${SHAs[$index]}
     echo "$SHA"  
@@ -117,17 +115,14 @@ for index in "${!SHAs[@]}"; do
 done
 
 
-# Commit, push the changes to remote tap repository and create PR for review
-if [ -z "$GITHUB_TOKEN" ]; then
-    echo "Error: GITHUB_TOKEN is not set"
-    exit 1
-fi
 
+# Check if branch already exists in formula repo
 if git ls-remote --exit-code --heads origin "$BRANCH_NAME"; then
     echo "Error: The branch '$BRANCH_NAME' already exists on the remote. Please create a new branch."
     exit 1
 fi
 
+# Commit, push updated formula file to remote tap repository
 git add "$FORMULA_FILE"
 git commit -m "Update formula to version $NEW_VERSION"
 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@${BREW_TAP_REPO_URL#https://}
@@ -137,8 +132,10 @@ if ! git push origin "$BRANCH_NAME"; then
     exit 1
 fi
 
+# Need to unset GITHUB_TOKEN for gh cli to use GH_TOKEN 
 unset GITHUB_TOKEN
 
+# Create PR
 if gh pr create --head "$BRANCH_NAME" \
     --title "Updates formula to version $NEW_VERSION" \
     --body "New Release version $NEW_VERSION has been created in pvsadm. Bumping formula version for pvsadm to version $NEW_VERSION."; then
