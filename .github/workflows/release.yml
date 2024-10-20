@@ -170,6 +170,8 @@ jobs:
         echo "VERSION: ${{ steps.get_version.outputs.VERSION }}"
         GET_VERSION_OUTPUT="${{ steps.get_version.outputs.VERSION }}"
         REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
+        TAP_REPO_URL="https://github.com/carmal891/homebrew-pvsadm"
+        FORMULA_FILE="pvsadm.rb"
         VERSION=${GET_VERSION_OUTPUT#v}
-        ./formula_updater.sh "$REPO_URL" "$VERSION" https://github.com/carmal891/homebrew-pvsadm pvsadm.rb
-     
+        ./formula_updater.sh "$REPO_URL" "$VERSION" "$TAP_REPO_URL" "$FORMULA_FILE"
+    

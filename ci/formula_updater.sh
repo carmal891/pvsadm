@@ -19,8 +19,6 @@ NEW_VERSION="$2"
 BREW_TAP_REPO_URL="$3"
 FORMULA_FILE="$4"
 FORMULA_PATH="Formula/"
-#RELEASES_PATH="$BASE_REPO_URL/releases/download"
-RELEASES_PATH="https://github.com/ppc64le-cloud/pvsadm/releases/download"
 
 echo "Release path in base repo - "$RELEASES_PATH
 
@@ -114,8 +112,6 @@ for index in "${!SHAs[@]}"; do
     fi
 done
 
-
-
 # Check if branch already exists in formula repo
 if git ls-remote --exit-code --heads origin "$BRANCH_NAME"; then
     echo "Error: The branch '$BRANCH_NAME' already exists on the remote. Please create a new branch."
@@ -132,14 +128,13 @@ if ! git push origin "$BRANCH_NAME"; then
     exit 1
 fi
 
-# Need to unset GITHUB_TOKEN for gh cli to use GH_TOKEN 
+# Need to unset GITHUB_TOKEN for gh cli to use GH_TOKEN instead
 unset GITHUB_TOKEN
 
 # Create PR
 if gh pr create --head "$BRANCH_NAME" \
     --title "Updates formula to version $NEW_VERSION" \
-    --body "New Release version $NEW_VERSION has been created in pvsadm. Bumping formula version for pvsadm to version $NEW_VERSION."; then
-
+    --body "New Release version $NEW_VERSION has been created in $BASE_REPO_URL. Bumping formula version to version $NEW_VERSION."; then
     echo "Updated formula to version $NEW_VERSION, pushed changes to $BRANCH_NAME, and created a PR"
 else
     echo "Error: failed to create PR"
