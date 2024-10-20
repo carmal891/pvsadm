@@ -31,7 +31,7 @@ compute_sha256() {
     local temp_file="$(mktemp)"
 
     if ! curl -L -o "$temp_file" "$url"; then
-        echo "Error: Failed to download $url"
+        echo "Error: failed to download $url"
         exit 1
     fi
     local sha256
@@ -58,17 +58,27 @@ done
 # Clone the repository with brew formula and checkout a new branch for pushing updates
 git clone "$BREW_TAP_REPO_URL" brew_tap_repo_temp
 if [ $? -ne 0 ]; then
-    echo "Error: Failed to clone the repository"
+    echo "Error: failed to clone the repository"
     exit 1
 fi
 cd brew_tap_repo_temp || { echo "Error: Failed to navigate to brew_tap_repo_temp"; exit 1; }
 BRANCH_NAME="bump_formula_v$NEW_VERSION"
+
+if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+    echo "Error: branch $BRANCH_NAME already exists"
+    exit 1
+fi
+
 git checkout -b "$BRANCH_NAME" || { echo "Error: Failed to create branch $BRANCH_NAME"; exit 1; }
 
 #Navigate to formula path
 cd "$FORMULA_PATH" || { echo "Error: Failed to navigate to $FORMULA_PATH"; exit 1; }
 
 #1. Update the main version in the formula file
+if [ ! -f "$FORMULA_FILE" ]; then
+    echo "Error: Formula file $FORMULA_FILE not found"
+    exit 1
+fi
 sed -i.bak "s/version \".*\"/version \"$NEW_VERSION\"/" "$FORMULA_FILE"
 
 #2. Update the individual formula and SHA based on OS and arch
@@ -98,20 +108,34 @@ for index in "${!SHAs[@]}"; do
 done
 
 #commit, push the changes to the remote tap repository and create PR for review
+if [ -z "$GITHUB_TOKEN" ]; then
+    echo "Error: GITHUB_TOKEN is not set"
+    exit 1
+fi
+
+if ! gh auth login; then
+    echo "Error: gitHub authentication failed"
+    exit 1
+fi
+
 git add "$FORMULA_FILE"
 git commit -m "Update formula to version $NEW_VERSION"
 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@${BREW_TAP_REPO_URL#https://}
-git push origin "$BRANCH_NAME"
+
+if ! git push origin "$BRANCH_NAME"; then
+    echo "Error: Failed to push branch $BRANCH_NAME"
+    exit 1
+fi
+
 unset GITHUB_TOKEN
 gh auth login
 gh auth status
-sleep 3
 if gh pr create --head "$BRANCH_NAME" \
     --title "Updates formula to version $NEW_VERSION" \
     --body "New Release version $NEW_VERSION has been created in pvsadm. Bumping formula version for pvsadm to version $NEW_VERSION."; then
-    
+
     echo "Updated formula to version $NEW_VERSION, pushed changes to $BRANCH_NAME, and created a PR"
 else
-    echo "There was an error in the PR generation process"
+    echo "Error: failed to create PR"
     exit 1 
 fi
