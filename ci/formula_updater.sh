@@ -45,8 +45,6 @@ compute_sha256() {
         exit 1
     fi
 
-    echo "Verify the content is not an HTML error page"
-
     # Verify the content is not an HTML error page (check first 10 lines)
     if grep -iq "<!doctype\|<html\|<head\|<body" <(head -n 10 "$temp_file"); then
         echo "Error: Downloaded content is not a valid tarball. Possibly an HTML error page."
@@ -81,6 +79,7 @@ if [ $? -ne 0 ]; then
     echo "Error: failed to clone the repository"
     exit 1
 fi
+
 cd brew_tap_repo_temp || { echo "Error: Failed to navigate to brew_tap_repo_temp"; exit 1; }
 BRANCH_NAME="bump_formula_v$NEW_VERSION"
 git checkout -b "$BRANCH_NAME" || { echo "Error: Failed to create branch $BRANCH_NAME"; exit 1; }
