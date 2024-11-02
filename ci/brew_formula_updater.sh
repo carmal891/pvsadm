@@ -87,17 +87,21 @@ for url in "${URL_VALUES[@]}"; do
     sleep 1
 done
 
+
+BREW_TAP_REPO_TEMP_DIR=$(mktemp -d)
+
 # Clone the repository having brew formula and checkout a new branch for pushing updates
-git clone "$BREW_TAP_REPO_URL" brew_tap_repo_temp
+git clone "$BREW_TAP_REPO_URL" "$BREW_TAP_REPO_TEMP_DIR"
 if [ $? -ne 0 ]; then
     echo "Error: failed to clone the repository"
     exit 1
 fi
 
-cd brew_tap_repo_temp || { echo "Error: Failed to navigate to brew_tap_repo_temp"; exit 1; }
+
+pushd $BREW_TAP_REPO_TEMP_DIR || { echo "Error: Failed to navigate to $BREW_TAP_REPO_TEMP_DIR"; exit 1; }
 BRANCH_NAME="bump_formula_v$NEW_VERSION"
 git checkout -b "$BRANCH_NAME" || { echo "Error: Failed to create branch $BRANCH_NAME"; exit 1; }
-cd "$FORMULA_PATH" || { echo "Error: Failed to navigate to $FORMULA_PATH"; exit 1; }
+pushd "$FORMULA_PATH" || { echo "Error: Failed to navigate to $FORMULA_PATH"; exit 1; }
 
 # Update the version field in formula file
 if [ ! -f "$FORMULA_FILE" ]; then
@@ -130,6 +134,9 @@ for index in "${!SHAs[@]}"; do
         echo "Warning: Unrecognized URL pattern for SHA: $SHA"
     fi
 done
+
+popd
+popd
 
 # Check if branch already exists in formula repo
 if git ls-remote --exit-code --heads origin "$BRANCH_NAME"; then
