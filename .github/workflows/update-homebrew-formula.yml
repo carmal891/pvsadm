@@ -1,0 +1,32 @@
+name: Update Homebrew Formula on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-homebrew:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up environment
+      run: |
+        git config --global user.name "pvsadm GitHub Actions"
+        git config --global user.email "pvsadmactions@github.com"
+
+    - name: Update Homebrew formula
+      env:
+        GITHUB_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
+        GH_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
+      run: |
+        RELEASE_VERSION=${{ github.event.release.tag_name }}
+        NEW_VERSION=${RELEASE_VERSION#v}
+        BASE_REPO_URL="https://github.com/${{ github.repository }}"
+        BREW_TAP_REPO_URL="https://github.com/carmal891/homebrew-pvsadm""
+        FORMULA_FILE="pvsadm.rb"
+        ./ci/brew_formula_updater.sh "$BASE_REPO_URL" "$NEW_VERSION" "$BREW_TAP_REPO_URL" "$FORMULA_FILE"
+
+
