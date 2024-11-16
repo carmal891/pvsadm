@@ -116,7 +116,7 @@ var Cmd = &cobra.Command{
 pvsadm image import --help for information
 
 # Set the API key or feed the --api-key commandline argument
-export IBMCLOUD_API_KEY=<IBM_CLOUD_API_KEY>
+export IBMCLOUD_APIKEY=<IBMCLOUD_APIKEY>
 
 # To Import the image across the two different IBM account use "--accesskey" and "--secretkey" options
 
@@ -262,20 +262,19 @@ pvsadm image import -n upstream-core-lon04 -b <BUCKETNAME> --object rhel-83-1003
 			return err
 		}
 		start := time.Now()
-		err = utils.PollUntil(time.Tick(2*time.Minute), time.After(opt.WatchTimeout), func() (bool, error) {
+		err = utils.SpinnerPollUntil(time.Tick(2*time.Minute), time.After(opt.WatchTimeout), func() (string, bool, error) {
 			job, err := pvmclient.JobClient.Get(*jobRef.ID)
 			if err != nil {
-				return false, fmt.Errorf("image import job failed to complete, err: %v", err)
+				return "", false, fmt.Errorf("image import job failed to complete, err: %v", err)
 			}
 			if *job.Status.State == jobStateCompleted {
-				klog.Infof("Image imported successfully, took %s", time.Since(start))
-				return true, nil
+				return "", true, nil
 			}
 			if *job.Status.State == jobStateFailed {
-				return false, fmt.Errorf("image import job failed to complete, err: %v", job.Status.Message)
+				return "", false, fmt.Errorf("image import job failed to complete, err: %v", job.Status.Message)
 			}
-			klog.Infof("Image import is in-progress, current state: %s", *job.Status.State)
-			return false, nil
+			message := fmt.Sprintf("Image import is in-progress, current state: %s", *job.Status.State)
+			return message, false, nil
 		})
 		if err != nil {
 			return err
@@ -296,23 +295,28 @@ pvsadm image import -n upstream-core-lon04 -b <BUCKETNAME> --object rhel-83-1003
 			return nil
 		}
 		klog.Infof("Waiting for image %s to be active. Please wait...", opt.ImageName)
-		start = time.Now()
-		return utils.PollUntil(time.Tick(10*time.Second), time.After(opt.WatchTimeout), func() (bool, error) {
+		return utils.SpinnerPollUntil(time.Tick(10*time.Second), time.After(opt.WatchTimeout), func() (string, bool, error) {
 			img, err := pvmclient.ImgClient.Get(*image.ImageID)
 			if err != nil {
-				return false, fmt.Errorf("failed to import the image, err: %v\n\nRun the command \"pvsadm get events -i %s\" to get more information about the failure", err, pvmclient.InstanceID)
+				return "", false, fmt.Errorf("failed to import the image, err: %v\n\nRun the command \"pvsadm get events -i %s\" to get more information about the failure", err, pvmclient.InstanceID)
 			}
 			if img.State == imageStateActive {
-				klog.Infof("Successfully imported the image: %s with ID: %s in %s", *image.Name, *image.ImageID, time.Since(start))
-				return true, nil
+				klog.Infof("Successfully imported the image: %s with ID: %s Total time taken: %s", *image.Name, *image.ImageID, time.Since(start).Round(time.Second))
+				return "", true, nil
 			}
-			klog.Infof("Waiting for image to be active. Current state: %s", img.State)
-			return false, nil
+			message := fmt.Sprintf("Waiting for image to be active. Current state: %s", img.State)
+			return message, false, nil
 		})
 	},
 }
 
 func init() {
+	const (
+		tier0     = "Tier 0            | 25 IOPS/GB"
+		tier1     = "Tier 1            | 10 IOPS/GB"
+		tier3     = "Tier 3            | 3 IOPS/GB"
+		fixedIOPS = "Fixed IOPS/Tier5k | 5000 IOPS upto 200GB"
+	)
 	// TODO pvs-instance-name and pvs-instance-id is deprecated and will be removed in a future release
 	Cmd.Flags().StringVarP(&pkg.ImageCMDOptions.WorkspaceName, "pvs-instance-name", "n", "", "PowerVS Instance name.")
 	Cmd.Flags().MarkDeprecated("pvs-instance-name", "pvs-instance-name is deprecated, workspace-name should be used")
@@ -332,14 +336,18 @@ func init() {
 	Cmd.Flags().BoolVarP(&pkg.ImageCMDOptions.Public, "public-bucket", "p", false, "Cloud Object Storage public bucket.")
 	Cmd.Flags().BoolVarP(&pkg.ImageCMDOptions.Watch, "watch", "w", false, "After image import watch for image to be published and ready to use")
 	Cmd.Flags().DurationVar(&pkg.ImageCMDOptions.WatchTimeout, "watch-timeout", 1*time.Hour, "watch timeout")
-	Cmd.Flags().StringVar(&pkg.ImageCMDOptions.StorageType, "pvs-storagetype", "tier3", `PowerVS Storage type, accepted values are [tier1, tier3, tier0, tier5k].
-																						Tier 0            | 25 IOPS/GB
-																						Tier 1            | 10 IOPS/GB
-																						Tier 3            | 3 IOPS/GB
-																						Fixed IOPS/Tier5k |	5000 IOPS regardless of size
-																						Note: The use of fixed IOPS is limited to volumes with a size of 200 GB or less, which is the break even size with Tier 0 (200 GB @ 25 IOPS/GB = 5000 IOPS).`)
-	Cmd.Flags().StringVar(&pkg.ImageCMDOptions.ServiceCredName, "cos-service-cred", "", "IBM COS Service Credential name to be auto generated(default \""+serviceCredPrefix+"-<COS Name>\")")
 
+	Cmd.Flags().StringVar(&pkg.ImageCMDOptions.StorageType, "pvs-storagetype", "tier3", fmt.Sprintf("PowerVS Storage type, accepted values are [tier0, tier1, tier3, tier5k].\n%s\n%s\n%s\n%s\nNote: The use of fixed IOPS is limited to volumes with a size of 200 GB or less, which is the break even size with Tier 0 (200 GB @ 25 IOPS/GB = 5000 IOPS).", tier0, tier1, tier3, fixedIOPS))
+	// The help section against --pvs-storagetype generates the following output:
+	/*
+			--pvs-storagetype string    PowerVS Storage type, accepted values are [tier0, tier1, tier3, tier5k].
+		                                Tier 0            | 25 IOPS/GB
+		                                Tier 1            | 10 IOPS/GB
+		                                Tier 3            | 3 IOPS/GB
+		                                Fixed IOPS/Tier5k | 5000 IOPS upto 200GB
+		                                Note: The use of fixed IOPS is limited to volumes with a size of 200 GB or less, which is the break even size with Tier 0 (200 GB @ 25 IOPS/GB = 5000 IOPS). (default "tier3")
+	*/
+	Cmd.Flags().StringVar(&pkg.ImageCMDOptions.ServiceCredName, "cos-service-cred", "", "IBM COS Service Credential name to be auto generated(default \""+serviceCredPrefix+"-<COS Name>\")")
 	_ = Cmd.MarkFlagRequired("bucket")
 	_ = Cmd.MarkFlagRequired("bucket-region")
 	_ = Cmd.MarkFlagRequired("pvs-image-name")

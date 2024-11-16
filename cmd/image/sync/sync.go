@@ -56,7 +56,7 @@ func copyWorker(copyJobs <-chan copyWorkload, results chan<- bool, workerId int)
 			klog.Errorf("copy object %s failed, err: %v", copyJob.srcObject, err)
 			results <- false
 		}
-		duration := time.Since(start)
+		duration := time.Since(start).Round(time.Second)
 		klog.Infof("Copying object: %s from bucket: %s to bucket: %s took %v", copyJob.srcObject, copyJob.srcBucket, copyJob.tgtBucket, duration)
 		results <- true
 	}
@@ -212,7 +212,7 @@ var Cmd = &cobra.Command{
 pvsadm image sync --help for information
 
 # Set the API key or feed the --api-key commandline argument
-export IBMCLOUD_API_KEY=<IBM_CLOUD_API_KEY>
+export IBMCLOUD_APIKEY=<IBMCLOUD_APIKEY>
 
 Examples:
 
@@ -279,7 +279,7 @@ Sample spec.yaml file:
 		}
 
 		// Calculate total elapsed time
-		duration := time.Since(start)
+		duration := time.Since(start).Round(time.Second)
 		klog.Infof("Total elapsed time: %v", duration)
 		return nil
 	},

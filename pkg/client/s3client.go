@@ -99,7 +99,7 @@ func NewS3Client(c *Client, instanceName, region string) (s3client *S3Client, er
 	}
 
 	if pkg.Options.APIKey == "" {
-		s3client.ApiKey = os.Getenv("IBMCLOUD_API_KEY")
+		s3client.ApiKey = os.Getenv("IBMCLOUD_APIKEY")
 	} else {
 		s3client.ApiKey = pkg.Options.APIKey
 	}
@@ -306,6 +306,6 @@ func (c *S3Client) UploadObject(fileName, objectName, bucketName string) error {
 		return err
 	}
 	fmt.Println()
-	klog.Infof("Upload completed successfully in %f seconds to location %s", time.Since(startTime).Seconds(), result.Location)
+	klog.Infof("Upload completed successfully in %s seconds to location %s", time.Since(startTime).Round(time.Second), result.Location)
 	return nil
 }
