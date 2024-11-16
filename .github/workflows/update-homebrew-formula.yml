@@ -3,7 +3,7 @@ name: Update Homebrew Formula on Release
 on:
   release:
     types: [published]
-    branches: [main]
+    branches: [fix/homebrew-version-bumper]
 
 jobs:
   update-homebrew:
@@ -30,7 +30,7 @@ jobs:
         BASE_REPO_URL="https://github.com/${{ github.repository }}"
         BREW_TAP_REPO_URL="https://github.com/carmal891/homebrew-pvsadm"
         FORMULA_FILE="pvsadm.rb"
-        
+
         ./ci/brew_formula_updater.sh "$BASE_REPO_URL" "$NEW_VERSION" "$BREW_TAP_REPO_URL" "$FORMULA_FILE"
 
 
