@@ -21,7 +21,7 @@ jobs:
       uses: actions/create-github-app-token@v1
       id: app-token
       with:
-        app-id: ${{ secrets.APP_ID }}
+        app-id: ${{ vars.APP_ID }}
         private-key: ${{ secrets.PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
 
@@ -37,7 +37,6 @@ jobs:
         BASE_REPO_URL="https://github.com/${{ github.repository }}"
         BREW_TAP_REPO_URL="https://github.com/carmal891/homebrew-pvsadm"
         FORMULA_FILE="pvsadm.rb"
-
         ./ci/brew_formula_updater.sh "$BASE_REPO_URL" "$NEW_VERSION" "$BREW_TAP_REPO_URL" "$FORMULA_FILE"
 
 
