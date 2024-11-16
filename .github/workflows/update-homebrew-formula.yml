@@ -12,10 +12,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up environment
-      run: |
-        git config --global user.name "pvsadm GitHub Actions"
-        git config --global user.email "pvsadmactions@github.com"
+    - name: Get GitHub App User ID and setup the environment
+      id: get-user-id
+      run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+      env:
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
+    - run: |
+        git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+        git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
 
     - name: Generate GitHub App Token
       uses: actions/create-github-app-token@v1
@@ -38,5 +42,3 @@ jobs:
         BREW_TAP_REPO_URL="https://github.com/carmal891/homebrew-pvsadm"
         FORMULA_FILE="pvsadm.rb"
         ./ci/brew_formula_updater.sh "$BASE_REPO_URL" "$NEW_VERSION" "$BREW_TAP_REPO_URL" "$FORMULA_FILE"
-
-
