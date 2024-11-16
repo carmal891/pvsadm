@@ -17,10 +17,18 @@ jobs:
         git config --global user.name "pvsadm GitHub Actions"
         git config --global user.email "pvsadmactions@github.com"
 
+    - name: Generate GitHub App Token
+      uses: actions/create-github-app-token@v1
+      id: app-token
+      with:
+        app-id: ${{ secrets.APP_ID }}
+        private-key: ${{ secrets.PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+
     - name: Update Homebrew formula
       env:
         GITHUB_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
-        GH_TOKEN: ${{ secrets.HOMEBREW_UPDATER_TOKEN}}
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
       run: |
         RELEASE_VERSION=${{ github.event.release.tag_name }}
         echo "RELEASE VERSION FROM EVENT : $RELEASE_VERSION"
