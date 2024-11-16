@@ -3,7 +3,6 @@ name: Update Homebrew Formula on Release
 on:
   release:
     types: [published]
-    branches: [fix/homebrew-version-bumper]
 
 jobs:
   update-homebrew:
