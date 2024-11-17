@@ -36,9 +36,9 @@ jobs:
       run: |
         RELEASE_VERSION=${{ github.event.release.tag_name }}
         echo "RELEASE VERSION FROM EVENT : $RELEASE_VERSION"
-        NEW_VERSION=${RELEASE_VERSION#v}
-        echo "RELEASE VERSION post trim : $NEW_VERSION"
+        RELEASE_VERSION=${RELEASE_VERSION#v}
+        echo "RELEASE VERSION post trim : $RELEASE_VERSION"
         BASE_REPO_URL="https://github.com/${{ github.repository }}"
         BREW_TAP_REPO_URL="https://github.com/carmal891/homebrew-pvsadm"
         FORMULA_FILE="pvsadm.rb"
-        ./ci/brew_formula_updater.sh "$BASE_REPO_URL" "$NEW_VERSION" "$BREW_TAP_REPO_URL" "$FORMULA_FILE"
+        ./ci/brew_formula_updater.sh "$BASE_REPO_URL" "$RELEASE_VERSION" "$BREW_TAP_REPO_URL" "$FORMULA_FILE"
