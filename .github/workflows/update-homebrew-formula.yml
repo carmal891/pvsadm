@@ -31,9 +31,8 @@ jobs:
     
     - name: Debug token scopes
       run: |
-      curl -H "Authorization: token ${{ steps.app-token.outputs.token }}" \
-          https://api.github.com/repos/carmal891/homebrew-pvsadm \
-          | jq .
+            curl -H "Authorization: token ${{ steps.app-token.outputs.token }}" \
+            https://api.github.com/repos/carmal891/homebrew-pvsadm | jq .
 
     - name: Update Homebrew formula
       env:
