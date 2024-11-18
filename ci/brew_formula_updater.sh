@@ -22,12 +22,7 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
-# Ensure GitHub token and GH CLI token are set
-#if [[ -z "$GITHUB_TOKEN" || -z "$GH_TOKEN" ]]; then
-#    echo "Error: Required tokens are not set."
-#    exit 1
-#fi
-
+# Ensure required Github app token is set
 if [[ -z "$GH_TOKEN" ]]; then
     echo "Error: Required tokens are not set."
     exit 1
@@ -160,9 +155,6 @@ if ! git push origin "$BRANCH_NAME"; then
     echo "Error: Failed to push branch $BRANCH_NAME"
     exit 1
 fi
-
-# Need to unset GITHUB_TOKEN for gh cli to use GH_TOKEN instead
-#unset GITHUB_TOKEN
 
 # Create PR
 if gh pr create --head "$BRANCH_NAME" \
