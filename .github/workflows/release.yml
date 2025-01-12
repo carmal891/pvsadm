@@ -48,10 +48,11 @@ jobs:
             bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pvsadm
             pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
 
-  release:
-    needs: build
-    runs-on: ubuntu-24.04
-    steps:
+      - name: List uploaded artifacts
+        run: |
+          echo "Uploaded artifacts:"
+          ls -R ./downloaded-artifacts
+
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
@@ -63,22 +64,37 @@ jobs:
             pvsadm-windows-amd64
           path: ./downloaded-artifacts
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: true
-          prerelease: true
-
-      - name: Upload Assets
-        run: |
-          for file in ./downloaded-artifacts/**/*; do
-            echo "Uploading $file..."
-            gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+  #release:
+  #  needs: build
+  #  runs-on: ubuntu-24.04
+  #  steps:
+  #    - name: Download all artifacts
+  #      uses: actions/download-artifact@v3
+  #      with:
+  #        name: |
+  #          pvsadm-darwin-amd64
+  #          pvsadm-darwin-arm64
+  #          pvsadm-linux-amd64
+  #          pvsadm-linux-ppc64le
+  #          pvsadm-windows-amd64
+  #        path: ./downloaded-artifacts
+#
+  #    - name: Create Release
+  #      id: create_release
+  #      uses: actions/create-release@v1
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+  #      with:
+  #        tag_name: ${{ github.ref_name }}
+  #        release_name: Release ${{ github.ref_name }}
+  #        draft: true
+  #        prerelease: true
+#
+  #    - name: Upload Assets
+  #      run: |
+  #        for file in ./downloaded-artifacts/**/*; do
+  #          echo "Uploading $file..."
+  #          gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
+  #        done
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
