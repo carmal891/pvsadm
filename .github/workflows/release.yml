@@ -40,7 +40,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ steps.get_version.outputs.VERSION }}
@@ -50,7 +50,7 @@ jobs:
     - name: Upload linux - amd64
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./bin/linux-amd64/pvsadm
@@ -60,7 +60,7 @@ jobs:
     - name: Upload linux - amd64 - tar.gz
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: pvsadm-linux-amd64.tar.gz
@@ -70,7 +70,7 @@ jobs:
     - name: Upload linux - ppc64le
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./bin/linux-ppc64le/pvsadm
@@ -80,7 +80,7 @@ jobs:
     - name: Upload linux - ppc64le - tar.gz
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: pvsadm-linux-ppc64le.tar.gz
@@ -90,7 +90,7 @@ jobs:
     - name: Upload darwin/amd64
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./bin/darwin-amd64/pvsadm
@@ -100,7 +100,7 @@ jobs:
     - name: Upload darwin/amd64 - tar.gz
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: pvsadm-darwin-amd64.tar.gz
@@ -110,7 +110,7 @@ jobs:
     - name: Upload darwin/arm64
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./bin/darwin-arm64/pvsadm
@@ -120,7 +120,7 @@ jobs:
     - name: Upload darwin/arm64 - tar.gz
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: pvsadm-darwin-arm64.tar.gz
@@ -130,7 +130,7 @@ jobs:
     - name: Upload Windows - amd64
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./bin/windows-amd64/pvsadm
@@ -140,7 +140,7 @@ jobs:
     - name: Upload Windows - amd64 - tar.gz
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: pvsadm-windows-amd64.tar.gz
@@ -150,7 +150,7 @@ jobs:
     - name: Upload all
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: pvsadm-binaries.tar.gz
