@@ -48,10 +48,11 @@ jobs:
             bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pvsadm
             pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
 
-      - name: List uploaded artifacts
+      - name: verify upload
         run: |
           echo "Uploaded artifacts:"
-          ls -R ./downloaded-artifacts
+          ls -lah /home/runner/work/pvsadm/
+          ls -lah /home/runner/work/pvsadm/bin/
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3
@@ -63,6 +64,11 @@ jobs:
             pvsadm-linux-ppc64le
             pvsadm-windows-amd64
           path: ./downloaded-artifacts
+      
+      - name: verify download
+        run: |
+          echo "Downloaded artifacts:"
+          ls -lah ./downloaded-artifacts
 
   #release:
   #  needs: build
