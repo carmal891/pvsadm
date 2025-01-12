@@ -37,7 +37,7 @@ jobs:
           VERSION=${{ steps.get_version.outputs.VERSION }}
           CGO_ENABLED=0 GOOS=${{ matrix.platform.os }} GOARCH=${{ matrix.platform.arch }} \
             go build -a -tags netgo -ldflags "-X github.com/ppc64le-cloud/pvsadm/pkg/version.Version=${VERSION} ${STATIC_FLAG}" \
-            -o bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pvsadm
+            -o bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
           tar -czvf pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz -C bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }} pvsadm
 
       - name: Upload Build Artifact
@@ -45,7 +45,7 @@ jobs:
         with:
           name: pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
           path: |
-            bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pvsadm
+            bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
             pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
 
       - name: verify upload
@@ -54,6 +54,10 @@ jobs:
           ls -lah /home/runner/work/pvsadm/pvsadm/
           ls -lah /home/runner/work/pvsadm/pvsadm/bin/
 
+  release:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
@@ -64,26 +68,12 @@ jobs:
             pvsadm-linux-ppc64le
             pvsadm-windows-amd64
           path: ./downloaded-artifacts
-      
+
       - name: verify download
         run: |
           echo "Downloaded artifacts:"
           ls -lah ./downloaded-artifacts
 
-  #release:
-  #  needs: build
-  #  runs-on: ubuntu-24.04
-  #  steps:
-  #    - name: Download all artifacts
-  #      uses: actions/download-artifact@v3
-  #      with:
-  #        name: |
-  #          pvsadm-darwin-amd64
-  #          pvsadm-darwin-arm64
-  #          pvsadm-linux-amd64
-  #          pvsadm-linux-ppc64le
-  #          pvsadm-windows-amd64
-  #        path: ./downloaded-artifacts
 #
   #    - name: Create Release
   #      id: create_release
