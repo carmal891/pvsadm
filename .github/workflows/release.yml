@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -50,7 +50,7 @@ jobs:
 
   release:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
@@ -61,6 +61,7 @@ jobs:
             pvsadm-linux-amd64
             pvsadm-linux-ppc64le
             pvsadm-windows-amd64
+          path: ./downloaded-artifacts
 
       - name: Create Release
         id: create_release
@@ -75,10 +76,9 @@ jobs:
 
       - name: Upload Assets
         run: |
-          for file in pvsadm-*-*.tar.gz; do
+          for file in ./downloaded-artifacts/*.tar.gz; do
             echo "Uploading $file..."
             gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
           done
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-          
