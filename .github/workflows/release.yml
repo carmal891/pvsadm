@@ -52,8 +52,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download Build Artifacts
+      - name: Download all artifacts
         uses: actions/download-artifact@v3
+        with:
+          name: |
+            pvsadm-darwin-amd64
+            pvsadm-darwin-arm64
+            pvsadm-linux-amd64
+            pvsadm-linux-ppc64le
+            pvsadm-windows-amd64
 
       - name: Create Release
         id: create_release
@@ -62,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ github.ref_name }}
           draft: true
           prerelease: true
 
@@ -74,3 +81,4 @@ jobs:
           done
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+          
