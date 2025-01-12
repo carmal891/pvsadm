@@ -51,8 +51,8 @@ jobs:
       - name: verify upload
         run: |
           echo "Uploaded artifacts:"
-          ls -lah /home/runner/work/pvsadm/
-          ls -lah /home/runner/work/pvsadm/bin/
+          ls -lah /home/runner/work/pvsadm/pvsadm/
+          ls -lah /home/runner/work/pvsadm/pvsadm/bin/
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3
@@ -92,7 +92,7 @@ jobs:
   #        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
   #      with:
   #        tag_name: ${{ github.ref_name }}
-  #        release_name: Release ${{ github.ref_name }}
+  #        release_name: Release ${{ steps.get_version.outputs.VERSION }}
   #        draft: true
   #        prerelease: true
 #
