@@ -63,12 +63,17 @@ jobs:
         with:
           name: |
             pvsadm-windows-amd64
+            pvsadm-darwin-amd64
+            pvsadm-darwin-arm64
+            pvsadm-linux-amd64
+            pvsadm-linux-ppc64le
+            pvsadm-windows-amd64
           path: ./downloaded-artifacts
 
       - name: verify download
         run: |
           echo "Downloaded artifacts:"
-          ls -lah ./downloaded-artifacts
+          ls -lah ./home/runner/work/pvsadm/pvsadm/downloaded-artifacts
 
 #
   #    - name: Create Release
