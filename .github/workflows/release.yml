@@ -62,7 +62,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: ./downloaded-artifacts
-          
+
+      - name: verify download
+        run: |
+          echo "Downloaded artifacts:"
+          ls -lah ./downloaded-artifacts/pvsadm-darwin-amd64/bin
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
