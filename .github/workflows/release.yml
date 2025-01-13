@@ -32,13 +32,13 @@ jobs:
 
       - name: Build
         run: |
-          mkdir -p bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}
+          mkdir -p bin/
           STATIC_FLAG='-w -extldflags "-static"'
           VERSION=${{ steps.get_version.outputs.VERSION }}
           CGO_ENABLED=0 GOOS=${{ matrix.platform.os }} GOARCH=${{ matrix.platform.arch }} \
             go build -a -tags netgo -ldflags "-X github.com/ppc64le-cloud/pvsadm/pkg/version.Version=${VERSION} ${STATIC_FLAG}" \
             -o bin/pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
-          tar -czvf pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz -C bin/pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
+          tar -czvf pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz -C bin/ pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
