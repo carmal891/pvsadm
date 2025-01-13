@@ -62,29 +62,23 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: ./downloaded-artifacts
+          
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: true
+          prerelease: true
 
-      - name: verify download
+      - name: Upload Assets
         run: |
-          echo "Downloaded artifacts:"
-          ls -lah ./home/runner/work/pvsadm/pvsadm/downloaded-artifacts
-
-#
-  #    - name: Create Release
-  #      id: create_release
-  #      uses: actions/create-release@v1
-  #      env:
-  #        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-  #      with:
-  #        tag_name: ${{ github.ref_name }}
-  #        release_name: Release ${{ steps.get_version.outputs.VERSION }}
-  #        draft: true
-  #        prerelease: true
-#
-  #    - name: Upload Assets
-  #      run: |
-  #        for file in ./downloaded-artifacts/**/*; do
-  #          echo "Uploading $file..."
-  #          gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
-  #        done
-  #      env:
-  #        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+          for file in ./downloaded-artifacts/**/*; do
+            echo "Uploading $file..."
+            gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
