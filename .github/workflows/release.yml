@@ -37,7 +37,7 @@ jobs:
           VERSION=${{ steps.get_version.outputs.VERSION }}
           CGO_ENABLED=0 GOOS=${{ matrix.platform.os }} GOARCH=${{ matrix.platform.arch }} \
             go build -a -tags netgo -ldflags "-X github.com/ppc64le-cloud/pvsadm/pkg/version.Version=${VERSION} ${STATIC_FLAG}" \
-            -o bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
+            -o bin/pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
           tar -czvf pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz -C bin/pvsadm-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
 
       - name: Upload Build Artifact
