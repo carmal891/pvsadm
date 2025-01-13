@@ -66,7 +66,7 @@ jobs:
       - name: verify download
         run: |
           echo "Downloaded artifacts:"
-          ls -lah ./downloaded-artifacts/pvsadm-darwin-amd64/bin
+          ls -lah ./downloaded-artifacts/pvsadm-darwin-amd64/
 
       - name: Create Release
         id: create_release
@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload Assets
         run: |
-          for file in ./downloaded-artifacts/**/.*.tar.gz; do
+          for file in ./downloaded-artifacts/**/*.tar.gz; do
             echo "Uploading $file..."
             gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
           done
