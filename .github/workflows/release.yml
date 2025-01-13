@@ -61,13 +61,6 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
-          name: |
-            pvsadm-windows-amd64
-            pvsadm-darwin-amd64
-            pvsadm-darwin-arm64
-            pvsadm-linux-amd64
-            pvsadm-linux-ppc64le
-            pvsadm-windows-amd64
           path: ./downloaded-artifacts
 
       - name: verify download
