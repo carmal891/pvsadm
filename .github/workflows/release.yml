@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload Assets
         run: |
-          for file in ./downloaded-artifacts/**/*; do
+          for file in ./downloaded-artifacts/**/.*.tar.gz; do
             echo "Uploading $file..."
             gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
           done
