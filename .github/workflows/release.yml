@@ -70,7 +70,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v3
+        uses: actions/create-release@v1.1.4
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
         with:
