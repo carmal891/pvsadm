@@ -66,28 +66,28 @@ jobs:
       - name: verify download
         run: |
           echo "Downloaded artifacts:"
-          ls -lah ./downloaded-artifacts/pvsadm-darwin-amd64/
+          ls -lah ./downloaded-artifacts/pvsadm-darwin-amd64/bin
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1.1.4
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          draft: true
-          prerelease: true
-
-      - name: Upload Assets
-        run: |
-          for file in ./downloaded-artifacts/**/.*; do
-            echo "Uploading $file..."
-            gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
-          done
-          for file in ./downloaded-artifacts/**/**/.*; do
-            echo "Uploading $file..."
-            gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+      #- name: Create Release
+      #  id: create_release
+      #  uses: actions/create-release@v1.1.4
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+      #  with:
+      #    tag_name: ${{ github.ref_name }}
+      #    release_name: Release ${{ steps.get_version.outputs.VERSION }}
+      #    draft: true
+      #    prerelease: true
+#
+      #- name: Upload Assets
+      #  run: |
+      #    for file in ./downloaded-artifacts/**/*.tar.gz; do
+      #      echo "Uploading $file..."
+      #      gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
+      #    done
+      #    for file in ./downloaded-artifacts/**/**/.*; do
+      #      echo "Uploading $file..."
+      #      gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
+      #    done
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
