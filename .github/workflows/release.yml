@@ -85,5 +85,9 @@ jobs:
             echo "Uploading $file..."
             gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
           done
+          for file in ./downloaded-artifacts/**/bin/.*; do
+            echo "Uploading $file..."
+            gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
