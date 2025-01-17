@@ -58,7 +58,7 @@ jobs:
         with:
           path: ./downloaded-artifacts
 
-      - name: Create Release
+      - name: Create draft release and upload assets
         id: create_release
         uses: softprops/action-gh-release@v1
         env:
