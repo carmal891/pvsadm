@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -50,7 +50,7 @@ jobs:
 
   release:
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     if: ${{ success() }}
     steps:
       - name: Download all artifacts
@@ -68,16 +68,5 @@ jobs:
           name: Release ${{ steps.get_version.outputs.VERSION }}
           draft: true
           prerelease: true
-
-      - name: Upload Assets
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for file in ./downloaded-artifacts/**/*.tar.gz; do
-            echo "Uploading tarball: $file..."
-            gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
-          done
-          for file in ./downloaded-artifacts/*/bin/*; do
-            echo "Uploading binary: $file..."
-            gh release upload "${{ github.ref_name }}" "$file" --repo ${{ github.repository }}
-          done
+          files: |
+            ./downloaded-artifacts/**
